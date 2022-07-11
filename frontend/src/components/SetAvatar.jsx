@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import axios from "axios";
 import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
@@ -58,12 +58,28 @@ export default function SetAvatar() {
   };
 
 
+const handlefunction=(e)=> {
+  document.getElementById('imagePreview').style['background-image']= "url("+URL.createObjectURL(e.target.files[0])+")";
 
+};
 
 
   return (
     <>
      <Toaster  position="top-right" reverseOrder={false}  />
+      <div style={{ marginTop:'10%'}}>
+          <h1 class="d-flex justify-content-center" style={{ color:'white'}}>Upload Profile Picture </h1>
+        <div class="avatar-upload">
+            <div class="avatar-edit">
+                <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg" onChange={handlefunction}/>
+                <label for="imageUpload" ><i class="fa fa-pencil fa-lg" aria-hidden="true"></i></label>
+            </div>
+            <div class="avatar-preview">
+                <div id="imagePreview" style={{backgroundImage: 'url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKaiKiPcLJj7ufrj6M2KaPwyCT4lDSFA5oog&usqp=CAU)'}} >
+                </div>
+            </div>
+        </div>
+      </div>
     
     
     </>
