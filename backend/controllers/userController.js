@@ -2,6 +2,9 @@ const User=require("../model/UserModel");
 const bcrypt=require("bcrypt");
 
 
+
+
+
 module.exports.register= async(req,res,next)=>{
     try {
         
@@ -45,3 +48,17 @@ module.exports.login= async(req,res,next)=>{
         next(error);
     }
 };
+
+
+module.exports.getAllUsers= async(req,res,next)=>{
+
+    try {
+        const users=await User.find({ _id:{ $ne :req.params.id}}).select([ "email","name","avtarImage","_id"])
+        return res.json(users);
+    
+    } 
+    catch (error) {
+        
+    }
+
+}

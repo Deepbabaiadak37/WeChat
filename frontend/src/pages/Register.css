@@ -48,7 +48,7 @@ a{
     text-decoration: none;
 }
 
-button{
+.btn-signup{
     color: white;
     background-color: #0074D9;
     padding: 12px;
@@ -58,7 +58,7 @@ button{
     font-size: larger;
 }
 
-button:hover
+ .btn-signup:hover
 {
     background-color: #7FDBFF !important;
     color:#001f3f;

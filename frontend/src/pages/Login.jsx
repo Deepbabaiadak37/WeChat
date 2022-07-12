@@ -98,6 +98,7 @@ function Login() {
        if(Validated())
        {
           const {data}= await axios.post(LoginRoute,{ email,password });
+          console.log(data);
           if(data.status==false)
           {
            toast(data.msg,toastRedConfig);
@@ -105,7 +106,7 @@ function Login() {
           else
           {
            toast("Login Successfull !!",toastGreenConfig);
-           localStorage.setItem('chat-app-user',JSON.stringify(data.user));
+           localStorage.setItem('chat-app-user',JSON.stringify(data.userchk));
           
            setTimeout(
                function() {
@@ -145,7 +146,7 @@ function Login() {
                         </div>
 
 
-                    <button onClick={handleSubmit}>SignIn</button><hr></hr>
+                    <button className='btn-signup' onClick={handleSubmit}>SignIn</button><hr></hr>
                     <span>New to WeChat?.. &nbsp;&nbsp;<a href='/register'>Register</a></span>
                 </form>
             </div>

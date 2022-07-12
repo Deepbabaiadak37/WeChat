@@ -172,7 +172,7 @@ function Register()
                             
                         </div>
 
-                        <button onClick={handleSubmit}>SignUp</button><hr></hr>
+                        <button className='btn-signup' onClick={handleSubmit}>SignUp</button><hr></hr>
                         <span>Already have account?.. &nbsp;&nbsp;<a href='/login'>Login</a></span>
                     </form>
                 </div>
