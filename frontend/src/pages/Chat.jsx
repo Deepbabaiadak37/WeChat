@@ -2,6 +2,106 @@ import { useEffect,useState,useRef } from "react";
 import axios from 'axios';
 import { ContactsRoute} from '../utils/APIRoutes';
 import './Chat.css';
+import $ from 'jquery';
+
+$(document).ready(function(){
+  
+    var preloadbg = document.createElement("img");
+    preloadbg.src = "https://s3-us-west-2.amazonaws.com/s.cdpn.io/245657/timeline1.png";
+    
+    $("#searchfield").focus(function(){
+      if($(this).val() == "Search contacts..."){
+        $(this).val("");
+      }
+    });
+    $("#searchfield").focusout(function(){
+      if($(this).val() == ""){
+        $(this).val("Search contacts...");
+        
+      }
+    });
+    
+    $("#sendmessage input").focus(function(){
+      if($(this).val() == "Send message..."){
+        $(this).val("");
+      }
+    });
+    $("#sendmessage input").focusout(function(){
+      if($(this).val() == ""){
+        $(this).val("Send message...");
+        
+      }
+    });
+      
+    
+    $(".friend").each(function(){   
+      $(this).click(function(){
+        var childOffset = $(this).offset();
+        var parentOffset = $(this).parent().parent().offset();
+        var childTop = childOffset.top - parentOffset.top;
+        var clone = $(this).find('img').eq(0).clone();
+        var top = childTop+12+"px";
+        
+        $(clone).css({'top': top}).addClass("floatingImg").appendTo("#chatbox");                  
+        
+        setTimeout(function(){$("#profile p").addClass("animate");$("#profile").addClass("animate");}, 100);
+        setTimeout(function(){
+          $("#chat-messages").addClass("animate");
+          $('.cx, .cy').addClass('s1');
+          setTimeout(function(){$('.cx, .cy').addClass('s2');}, 100);
+          setTimeout(function(){$('.cx, .cy').addClass('s3');}, 200);     
+        }, 150);                            
+        
+        $('.floatingImg').animate({
+          'width': "68px",
+          'left':'108px',
+          'top':'20px'
+        }, 200);
+        
+        var name = $(this).find("p strong").html();
+        var email = $(this).find("p span").html();                            
+        $("#profile p").html(name);
+        $("#profile span").html(email);     
+        
+        $(".message").not(".right").find("img").attr("src", $(clone).attr("src"));                  
+        $('#friendslist').fadeOut();
+        $('#chatview').fadeIn();
+      
+        
+        $('#close').unbind("click").click(function(){       
+          $("#chat-messages, #profile, #profile p").removeClass("animate");
+          $('.cx, .cy').removeClass("s1 s2 s3");
+          $('.floatingImg').animate({
+            'width': "40px",
+            'top':top,
+            'left': '12px'
+          }, 200, function(){$('.floatingImg').remove()});        
+          
+          setTimeout(function(){
+            $('#chatview').fadeOut();
+            $('#friendslist').fadeIn();       
+          }, 50);
+        });
+        
+      });
+    });     
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function Chat() {
     const socket = useRef();
@@ -53,9 +153,6 @@ function Chat() {
 
     return ( 
         <>
-        <div>
-        <div>
-
         {contacts.map((contact, index) => {
               return (
                 <div>{contact.name}</div>
@@ -64,202 +161,112 @@ function Chat() {
 
 
 
+<a id="view-code" href="https://codepen.io/virgilpana/pen/ZYZXgP" target="_blank">VIEW CODE</a>
 
-
-
-
-
-
-
-
-<div class="container">
-
-    <div class="page-title">
-        <div class="row gutters">
-            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                <h5 class="title">Chat App</h5>
-            </div>
-            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12"> </div>
+<div id="chatbox">
+    <div id="friendslist">
+      <div id="topmenu">
+          <span class="friends"></span>
+            <span class="chats"></span>
+            <span class="history"></span>
         </div>
-    </div>
-  
-    <div class="content-wrapper">
+        
+        <div id="friends">
+          <div class="friend">
+              <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/245657/1_copy.jpg" />
+                <p>
+                  <strong>Miro Badev</strong>
+                  <span>mirobadev@gmail.com</span>
+                </p>
+                <div class="status available"></div>
+            </div>
+            
+            <div class="friend">
+              <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/245657/2_copy.jpg" />
+                <p>
+                  <strong>Martin Joseph</strong>
+                  <span>marjoseph@gmail.com</span>
+                </p>
+                <div class="status away"></div>
+            </div>
+            
+            <div id="search">
+              <input type="text" id="searchfield" value="Search contacts..." />
+            </div>
+            
+        </div>                
+        
+    </div>  
+    
+    <div id="chatview" class="p1">      
+        <div id="profile">
 
-        <div class="row gutters">
-
-            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-
-                <div class="card m-0">
-
-                    <div class="row no-gutters">
-                        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-3 col-3">
-                            <div class="users-container">
-                                <div class="chat-search-box">
-                                    <div class="input-group">
-                                        <input class="form-control" placeholder="Search" />
-                                        <div class="input-group-btn">
-                                            <button type="button" class="btn btn-info">
-                                                <i class="fa fa-search"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <ul class="users">
-                                    <li class="person" data-chat="person1">
-                                        <div class="user">
-                                            <img src="https://www.bootdey.com/img/Content/avatar/avatar3.png" alt="Retail Admin"/>
-                                            <span class="status busy"></span>
-                                        </div>
-                                        <p class="name-time">
-                                            <span class="name">Steve Bangalter</span>
-                                            <span class="time">15/02/2019</span>
-                                        </p>
-                                    </li>
-                                    <li class="person" data-chat="person1">
-                                        <div class="user">
-                                            <img src="https://www.bootdey.com/img/Content/avatar/avatar1.png" alt="Retail Admin"/>
-                                            <span class="status offline"></span>
-                                        </div>
-                                        <p class="name-time">
-                                            <span class="name">Steve Bangalter</span>
-                                            <span class="time">15/02/2019</span>
-                                        </p>
-                                    </li>
-                                    <li class="person active-user" data-chat="person2">
-                                        <div class="user">
-                                            <img src="https://www.bootdey.com/img/Content/avatar/avatar2.png" alt="Retail Admin"/>
-                                            <span class="status away"></span>
-                                        </div>
-                                        <p class="name-time">
-                                            <span class="name">Peter Gregor</span>
-                                            <span class="time">12/02/2019</span>
-                                        </p>
-                                    </li>
-                                    <li class="person" data-chat="person3">
-                                        <div class="user">
-                                            <img src="https://www.bootdey.com/img/Content/avatar/avatar3.png" alt="Retail Admin"/>
-                                            <span class="status busy"></span>
-                                        </div>
-                                        <p class="name-time">
-                                            <span class="name">Jessica Larson</span>
-                                            <span class="time">11/02/2019</span>
-                                        </p>
-                                    </li>
-                                    <li class="person" data-chat="person4">
-                                        <div class="user">
-                                            <img src="https://www.bootdey.com/img/Content/avatar/avatar4.png" alt="Retail Admin"/>
-                                            <span class="status offline"></span>
-                                        </div>
-                                        <p class="name-time">
-                                            <span class="name">Lisa Guerrero</span>
-                                            <span class="time">08/02/2019</span>
-                                        </p>
-                                    </li>
-                                    <li class="person" data-chat="person5">
-                                        <div class="user">
-                                            <img src="https://www.bootdey.com/img/Content/avatar/avatar5.png" alt="Retail Admin"/>
-                                            <span class="status away"></span>
-                                        </div>
-                                        <p class="name-time">
-                                            <span class="name">Michael Jordan</span>
-                                            <span class="time">05/02/2019</span>
-                                        </p>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-xl-8 col-lg-8 col-md-8 col-sm-9 col-9">
-                            <div class="selected-user">
-                                <span>To: <span class="name">Emily Russell</span></span>
-                            </div>
-                            <div class="chat-container">
-                                <ul class="chat-box chatContainerScroll">
-                                    <li class="chat-left">
-                                        <div class="chat-avatar">
-                                            <img src="https://www.bootdey.com/img/Content/avatar/avatar3.png" alt="Retail Admin"/>
-                                            <div class="chat-name">Russell</div>
-                                        </div>
-                                        <div class="chat-text">Hello, I'm Russell.
-                                            <br></br>How can I help you today?</div>
-                                        <div class="chat-hour">08:55 <span class="fa fa-check-circle"></span></div>
-                                    </li>
-                                    <li class="chat-right">
-                                        <div class="chat-hour">08:56 <span class="fa fa-check-circle"></span></div>
-                                        <div class="chat-text">Hi, Russell
-                                            <br></br> I need more information about Developer Plan.</div>
-                                        <div class="chat-avatar">
-                                            <img src="https://www.bootdey.com/img/Content/avatar/avatar3.png" alt="Retail Admin"/>
-                                            <div class="chat-name">Sam</div>
-                                        </div>
-                                    </li>
-                                    <li class="chat-left">
-                                        <div class="chat-avatar">
-                                            <img src="https://www.bootdey.com/img/Content/avatar/avatar3.png" alt="Retail Admin"/>
-                                            <div class="chat-name">Russell</div>
-                                        </div>
-                                        <div class="chat-text">Are we meeting today?
-                                            <br></br>Project has been already finished and I have results to show you.</div>
-                                        <div class="chat-hour">08:57 <span class="fa fa-check-circle"></span></div>
-                                    </li>
-                                    <li class="chat-right">
-                                        <div class="chat-hour">08:59 <span class="fa fa-check-circle"></span></div>
-                                        <div class="chat-text">Well I am not sure.
-                                            <br></br>I have results to show you.</div>
-                                        <div class="chat-avatar">
-                                            <img src="https://www.bootdey.com/img/Content/avatar/avatar5.png" alt="Retail Admin"/>
-                                            <div class="chat-name">Joyse</div>
-                                        </div>
-                                    </li>
-                                    <li class="chat-left">
-                                        <div class="chat-avatar">
-                                            <img src="https://www.bootdey.com/img/Content/avatar/avatar3.png" alt="Retail Admin"/>
-                                            <div class="chat-name">Russell</div>
-                                        </div>
-                                        <div class="chat-text">The rest of the team is not here yet.
-                                            <br></br>Maybe in an hour or so?</div>
-                                        <div class="chat-hour">08:57 <span class="fa fa-check-circle"></span></div>
-                                    </li>
-                                    <li class="chat-right">
-                                        <div class="chat-hour">08:59 <span class="fa fa-check-circle"></span></div>
-                                        <div class="chat-text">Have you faced any problems at the last phase of the project?</div>
-                                        <div class="chat-avatar">
-                                            <img src="https://www.bootdey.com/img/Content/avatar/avatar4.png" alt="Retail Admin"/>
-                                            <div class="chat-name">Jin</div>
-                                        </div>
-                                    </li>
-                                    <li class="chat-left">
-                                        <div class="chat-avatar">
-                                            <img src="https://www.bootdey.com/img/Content/avatar/avatar3.png" alt="Retail Admin"/>
-                                            <div class="chat-name">Russell</div>
-                                        </div>
-                                        <div class="chat-text">Actually everything was fine.
-                                            <br></br>I'm very excited to show this to our team.</div>
-                                        <div class="chat-hour">07:00 <span class="fa fa-check-circle"></span></div>
-                                    </li>
-                                </ul>
-                                <div class="form-group mt-3 mb-0">
-                                    <textarea class="form-control" rows="3" placeholder="Type your message here..."></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <div id="close">
+                <div class="cy"></div>
+                <div class="cx"></div>
+            </div>
+            
+            <p>Miro Badev</p>
+            <span>miro@badev@gmail.com</span>
+        </div>
+        <div id="chat-messages">
+          <label>Thursday 02</label>
+            
+            <div class="message">
+              <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/245657/1_copy.jpg" />
+                <div class="bubble">
+                  Really cool stuff!
+                    <div class="corner"></div>
+                    <span>3 min</span>
                 </div>
-
             </div>
-
+            
+            <div class="message right">
+              <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/245657/2_copy.jpg" />
+                <div class="bubble">
+                  Can you share a link for the tutorial?
+                    <div class="corner"></div>
+                    <span>1 min</span>
+                </div>
+            </div>
+            
+            <div class="message">
+              <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/245657/1_copy.jpg" />
+                <div class="bubble">
+                  Yeah, hold on
+                    <div class="corner"></div>
+                    <span>Now</span>
+                </div>
+            </div>
+            
+            <div class="message right">
+              <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/245657/2_copy.jpg" />
+                <div class="bubble">
+                  Can you share a link for the tutorial?
+                    <div class="corner"></div>
+                    <span>1 min</span>
+                </div>
+            </div>
+            
+            <div class="message">
+              <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/245657/1_copy.jpg" />
+                <div class="bubble">
+                  Yeah, hold on
+                    <div class="corner"></div>
+                    <span>Now</span>
+                </div>
+            </div>
+            
         </div>
-        
-    </div>
-
-</div>
-
-
+      
+        <div id="sendmessage">
+          <input type="text" value="Send message..." />
+            <button id="send"></button>
         </div>
-      </div>
-        
-        
-        
-        
+    
+    </div>        
+</div>  
+    
         
         
         </>
@@ -267,3 +274,5 @@ function Chat() {
 }
 
 export default Chat;
+
+
