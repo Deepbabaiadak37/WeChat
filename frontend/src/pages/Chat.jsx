@@ -2,106 +2,6 @@ import { useEffect,useState,useRef } from "react";
 import axios from 'axios';
 import { ContactsRoute} from '../utils/APIRoutes';
 import './Chat.css';
-import $ from 'jquery';
-
-$(document).ready(function(){
-  
-    var preloadbg = document.createElement("img");
-    preloadbg.src = "https://s3-us-west-2.amazonaws.com/s.cdpn.io/245657/timeline1.png";
-    
-    $("#searchfield").focus(function(){
-      if($(this).val() == "Search contacts..."){
-        $(this).val("");
-      }
-    });
-    $("#searchfield").focusout(function(){
-      if($(this).val() == ""){
-        $(this).val("Search contacts...");
-        
-      }
-    });
-    
-    $("#sendmessage input").focus(function(){
-      if($(this).val() == "Send message..."){
-        $(this).val("");
-      }
-    });
-    $("#sendmessage input").focusout(function(){
-      if($(this).val() == ""){
-        $(this).val("Send message...");
-        
-      }
-    });
-      
-    
-    $(".friend").each(function(){   
-      $(this).click(function(){
-        var childOffset = $(this).offset();
-        var parentOffset = $(this).parent().parent().offset();
-        var childTop = childOffset.top - parentOffset.top;
-        var clone = $(this).find('img').eq(0).clone();
-        var top = childTop+12+"px";
-        
-        $(clone).css({'top': top}).addClass("floatingImg").appendTo("#chatbox");                  
-        
-        setTimeout(function(){$("#profile p").addClass("animate");$("#profile").addClass("animate");}, 100);
-        setTimeout(function(){
-          $("#chat-messages").addClass("animate");
-          $('.cx, .cy').addClass('s1');
-          setTimeout(function(){$('.cx, .cy').addClass('s2');}, 100);
-          setTimeout(function(){$('.cx, .cy').addClass('s3');}, 200);     
-        }, 150);                            
-        
-        $('.floatingImg').animate({
-          'width': "68px",
-          'left':'108px',
-          'top':'20px'
-        }, 200);
-        
-        var name = $(this).find("p strong").html();
-        var email = $(this).find("p span").html();                            
-        $("#profile p").html(name);
-        $("#profile span").html(email);     
-        
-        $(".message").not(".right").find("img").attr("src", $(clone).attr("src"));                  
-        $('#friendslist').fadeOut();
-        $('#chatview').fadeIn();
-      
-        
-        $('#close').unbind("click").click(function(){       
-          $("#chat-messages, #profile, #profile p").removeClass("animate");
-          $('.cx, .cy').removeClass("s1 s2 s3");
-          $('.floatingImg').animate({
-            'width': "40px",
-            'top':top,
-            'left': '12px'
-          }, 200, function(){$('.floatingImg').remove()});        
-          
-          setTimeout(function(){
-            $('#chatview').fadeOut();
-            $('#friendslist').fadeIn();       
-          }, 50);
-        });
-        
-      });
-    });     
-  });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 function Chat() {
     const socket = useRef();
@@ -153,121 +53,128 @@ function Chat() {
 
     return ( 
         <>
+       {/* 
+
         {contacts.map((contact, index) => {
               return (
-                <div>{contact.name}</div>
+                      
+                      <p>{contact.name}</p>
+                   
               );
-            })}
+            })
+        }
+
+      */}
 
 
 
-<a id="view-code" href="https://codepen.io/virgilpana/pen/ZYZXgP" target="_blank">VIEW CODE</a>
+  <div className="container" style={{ backgroundColor:'#203A43',color:'white'}}>
+  <div class="container">
+<h3 class=" text-center">Messaging</h3>
+<div class="messaging">
+      <div class="inbox_msg">
 
-<div id="chatbox">
-    <div id="friendslist">
-      <div id="topmenu">
-          <span class="friends"></span>
-            <span class="chats"></span>
-            <span class="history"></span>
-        </div>
         
-        <div id="friends">
-          <div class="friend">
-              <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/245657/1_copy.jpg" />
-                <p>
-                  <strong>Miro Badev</strong>
-                  <span>mirobadev@gmail.com</span>
-                </p>
-                <div class="status available"></div>
+        <div class="inbox_people">
+          <div class="headind_srch">
+            <div class="recent_heading">
+              <h4>Recent</h4>
             </div>
-            
-            <div class="friend">
-              <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/245657/2_copy.jpg" />
-                <p>
-                  <strong>Martin Joseph</strong>
-                  <span>marjoseph@gmail.com</span>
-                </p>
-                <div class="status away"></div>
+            <div class="srch_bar">
+              <div class="stylish-input-group">
+                <input type="text" class="search-bar"  placeholder="Search" />
+                <span class="input-group-addon">
+                <button type="button"> <i class="fa fa-search" aria-hidden="true"></i> </button>
+                </span> </div>
             </div>
-            
-            <div id="search">
-              <input type="text" id="searchfield" value="Search contacts..." />
-            </div>
-            
-        </div>                
-        
-    </div>  
-    
-    <div id="chatview" class="p1">      
-        <div id="profile">
+          </div>
+          <div class="inbox_chat">
 
-            <div id="close">
-                <div class="cy"></div>
-                <div class="cx"></div>
-            </div>
-            
-            <p>Miro Badev</p>
-            <span>miro@badev@gmail.com</span>
+            {contacts.map((contact, index) => {
+              return (
+                <div class="chat_list active_chat">
+                <div class="chat_people">
+                  <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"/> </div>
+                  <div class="chat_ib">
+                    <h5> {contact.name}<span class="chat_date">Dec 25</span></h5>
+                    <p>Typing....</p>
+                  </div>
+                </div>
+              </div>
+                      
+                   
+              );
+            })
+        }
+
+
+
+          </div>
         </div>
-        <div id="chat-messages">
-          <label>Thursday 02</label>
-            
-            <div class="message">
-              <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/245657/1_copy.jpg" />
-                <div class="bubble">
-                  Really cool stuff!
-                    <div class="corner"></div>
-                    <span>3 min</span>
-                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+        <div class="mesgs">
+          <div class="msg_history">
+            <div class="incoming_msg">
+              <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"/> </div>
+              <div class="received_msg">
+                <div class="received_withd_msg">
+                  <p>Test which is a new approach to have all
+                    solutions</p>
+                  <span class="time_date"> 11:01 AM    |    June 9</span></div>
+              </div>
             </div>
-            
-            <div class="message right">
-              <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/245657/2_copy.jpg" />
-                <div class="bubble">
-                  Can you share a link for the tutorial?
-                    <div class="corner"></div>
-                    <span>1 min</span>
-                </div>
+            <div class="outgoing_msg">
+              <div class="sent_msg">
+                <p>Test which is a new approach to have all
+                  solutions</p>
+                <span class="time_date"> 11:01 AM    |    June 9</span> </div>
             </div>
-            
-            <div class="message">
-              <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/245657/1_copy.jpg" />
-                <div class="bubble">
-                  Yeah, hold on
-                    <div class="corner"></div>
-                    <span>Now</span>
-                </div>
+            <div class="incoming_msg">
+              <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"/> </div>
+              <div class="received_msg">
+                <div class="received_withd_msg">
+                  <p>Test, which is a new approach to have</p>
+                  <span class="time_date"> 11:01 AM    |    Yesterday</span></div>
+              </div>
             </div>
-            
-            <div class="message right">
-              <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/245657/2_copy.jpg" />
-                <div class="bubble">
-                  Can you share a link for the tutorial?
-                    <div class="corner"></div>
-                    <span>1 min</span>
-                </div>
+            <div class="outgoing_msg">
+              <div class="sent_msg">
+                <p>Apollo University, Delhi, India Test</p>
+                <span class="time_date"> 11:01 AM    |    Today</span> </div>
             </div>
-            
-            <div class="message">
-              <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/245657/1_copy.jpg" />
-                <div class="bubble">
-                  Yeah, hold on
-                    <div class="corner"></div>
-                    <span>Now</span>
-                </div>
+            <div class="incoming_msg">
+              <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"/> </div>
+              <div class="received_msg">
+                <div class="received_withd_msg">
+                  <p>
+                    products, at a price anyone can afford.</p>
+                  <span class="time_date"> 11:01 AM    |    Today</span></div>
+              </div>
             </div>
-            
+          </div>
+          <div class="type_msg">
+            <div class="input_msg_write">
+              <input type="text" class="write_msg" placeholder="Type a message" />
+              <button class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+            </div>
+          </div>
         </div>
+      </div>
       
-        <div id="sendmessage">
-          <input type="text" value="Send message..." />
-            <button id="send"></button>
-        </div>
-    
-    </div>        
-</div>  
-    
-        
+      
+    </div></div>
+  </div>
         
         </>
     );
