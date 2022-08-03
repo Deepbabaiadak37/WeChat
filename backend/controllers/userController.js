@@ -27,27 +27,31 @@ module.exports.register= async(req,res,next)=>{
 };
 
 
+
+
 module.exports.login= async(req,res,next)=>{
-    try {
+    try 
+    {
+        const { email,password}=req.body;
+        const userchk=await User.findOne({ email});
+        if(!userchk)
+            return res.json({ msg: "Email not Exists !!",status:false});
+
+        const credentialchk=await bcrypt.compare(password, userchk.password);
         
-    const { email,password}=req.body;
-    const userchk=await User.findOne({ email});
-    if(!userchk)
-        return res.json({ msg: "Email not Exists !!",status:false});
+        if(!credentialchk)
+            return res.json({ msg: "InCorrect Password !!",status:false});
 
-    const credentialchk=await bcrypt.compare(password, userchk.password);
-       
-    if(!credentialchk)
-        return res.json({ msg: "InCorrect Password !!",status:false});
-
-    delete userchk.password;
-    return res.json({ msg: "Login  Successfull !!",status:true,userchk});
+        delete userchk.password;
+        return res.json({ msg: "Login  Successfull !!",status:true,userchk});
     } 
     catch (error) 
     {
         next(error);
     }
 };
+
+
 
 
 module.exports.getAllUsers= async(req,res,next)=>{
