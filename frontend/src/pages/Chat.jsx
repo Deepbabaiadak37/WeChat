@@ -10,6 +10,10 @@ function Chat() {
     const [currentChat, setCurrentChat] = useState(undefined);
     const [currentUser, setCurrentUser] = useState(undefined);
     const [data,setData]=useState(null);
+    const [chatselected,setChatselected]=useState(false);
+
+
+
     useEffect( ()=>{
    
 
@@ -52,7 +56,12 @@ function Chat() {
     },[]);
 
 
-    const openChatSection=(val)=>{  setData(val); }
+    const openChatSection=(val)=>{  
+      
+      setChatselected(true);
+      setData(val); 
+    
+    }
 
     return ( 
         <>
@@ -99,7 +108,16 @@ function Chat() {
           </div>
         </div>
 
-              <ChatSection value={data}/>
+              {
+                chatselected?(<ChatSection value={data}/>) :
+                (
+                  <div className="d-flex justify-content-center mt-5">
+                      <h1>Welcome to WeChat</h1>
+
+                  </div>
+                )
+              }
+              
       </div>
       
       
