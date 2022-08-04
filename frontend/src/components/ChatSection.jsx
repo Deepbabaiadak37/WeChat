@@ -84,7 +84,7 @@ function ChatSection(props)
 
          {selected && <Picker onEmojiClick={onEmojiClick} pickerStyle={{ position: 'absolute',top:'-365px' }}/>}
 
-            <button onClick={emojiSelect}>emoji</button>
+            <button onClick={emojiSelect} className="btn btn-primary cus"><i class='fa fa-smile-o' style={{fontSize:'25px'}}></i></button>
             <div class="input_msg_write">
               <input type="text" class="write_msg" placeholder="Type a message" onChange={handleInput}  value={input}/>
               <button class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
