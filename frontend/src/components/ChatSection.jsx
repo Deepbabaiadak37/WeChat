@@ -7,12 +7,16 @@ function ChatSection(props)
   const [chosenEmoji, setChosenEmoji] = useState(null);
   const [input,setInput]=useState("");
   const [selected,setSelected]=useState(false);
+
+
   const onEmojiClick = (event, emojiObject) => {
     var ans="";
     setChosenEmoji(emojiObject);
     ans=ans+input+emojiObject.emoji;
     setInput(ans);
   };
+
+
 
   const emojiSelect=()=>{
     setSelected(!selected);
@@ -26,7 +30,7 @@ function ChatSection(props)
 
         <div class="mesgs">
          
-         chat {props.value}
+         {props.currentUser} {props.value}
          
           <div class="msg_history">
             <div class="incoming_msg">
@@ -86,7 +90,7 @@ function ChatSection(props)
 
             
             <div class="input_msg_write">
-              <button onClick={emojiSelect} className="btn btn-primary cus mt-2 "><i class='fa fa-smile-o' style={{fontSize:'25px'}}></i></button>
+              <button onClick={emojiSelect} className="btn btn-primary cus mt-2 "><i class='fa fa-smile-o' style={{fontSize:'31px'}}></i></button>
               <input type="text" class="write_msg" placeholder="Type a message" onChange={handleInput}  value={input}/>
               <button class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
             </div>

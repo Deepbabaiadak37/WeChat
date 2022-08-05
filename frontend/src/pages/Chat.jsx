@@ -5,7 +5,6 @@ import './Chat.css';
 import ChatSection from "../components/ChatSection";
 
 function Chat() {
-    const socket = useRef();
     const [contacts, setContacts] = useState([]);
     const [currentChat, setCurrentChat] = useState(undefined);
     const [currentUser, setCurrentUser] = useState(undefined);
@@ -16,21 +15,18 @@ function Chat() {
 
     useEffect( ()=>{
    
-
-        if(!localStorage.getItem('chat-app-user') || localStorage.getItem('chat-app-user')==undefined)
-            window.location.href='/login';
-
-        else
+        if(localStorage.length>0)
         {
             if(JSON.parse(localStorage.getItem('chat-app-user'))['isAvtarImageSet']==false)
-                window.location.href='/setAvatar';
-            
+                window.location.href='/setAvatar'; 
         }
+        else
+          window.location.href='/login';
 
-        setCurrentUser( JSON.parse( localStorage.getItem('chat-app-user')) );
+     //   setCurrentUser( localStorage.getItem('chat-app-user'));
 
-
-        if (JSON.parse( localStorage.getItem('chat-app-user')) ) 
+console.log(localStorage.getItem('chat-app-user'));
+        if (localStorage.getItem('chat-app-user')) 
         {
             if (JSON.parse( localStorage.getItem('chat-app-user'))['isAvtarImageSet']) 
             {
@@ -55,6 +51,8 @@ function Chat() {
 
     },[]);
 
+  
+
 
     const openChatSection=(val)=>{  
       
@@ -65,9 +63,9 @@ function Chat() {
 
     return ( 
         <>
-       
+   {    localStorage.length>0 ?
 
-
+  (
   <div className="container mt-4" style={{ backgroundColor:'#141E30',color:'white'}}>
   <div class="container">
     <h3 class=" text-center"> {JSON.parse( localStorage.getItem('chat-app-user'))['name']} </h3>
@@ -109,7 +107,7 @@ function Chat() {
         </div>
 
               {
-                chatselected?(<ChatSection value={data}/>) :
+                chatselected?(  <ChatSection value={data} currentUser={currentUser} />  ) :
                 (
                   <div className="d-flex justify-content-center mt-5">
                       <h1>Welcome to WeChat</h1>
@@ -123,6 +121,9 @@ function Chat() {
       
     </div></div>
   </div>
+  
+  ):  (<></>)
+            }
         
         </>
     );
