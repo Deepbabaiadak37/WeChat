@@ -3,12 +3,15 @@ import axios from 'axios';
 import { ContactsRoute} from '../utils/APIRoutes';
 import './Chat.css';
 import ChatSection from "../components/ChatSection";
+import ReactDOM from 'react-dom/client';
+
+
 
 function Chat() {
     const [contacts, setContacts] = useState([]);
     const [currentChat, setCurrentChat] = useState(undefined);
     const [currentUser, setCurrentUser] = useState(undefined);
-    const [data,setData]=useState(null);
+
     const [chatselected,setChatselected]=useState(false);
 
 
@@ -23,9 +26,8 @@ function Chat() {
         else
           window.location.href='/login';
 
-     //   setCurrentUser( localStorage.getItem('chat-app-user'));
+        setCurrentUser( localStorage.getItem('chat-app-user'));
 
-console.log(localStorage.getItem('chat-app-user'));
         if (localStorage.getItem('chat-app-user')) 
         {
             if (JSON.parse( localStorage.getItem('chat-app-user'))['isAvtarImageSet']) 
@@ -54,11 +56,22 @@ console.log(localStorage.getItem('chat-app-user'));
   
 
 
-    const openChatSection=(val)=>{  
-      
+    const openChatSection=(contact,index)=>{  
       setChatselected(true);
-      setData(val); 
-    
+      setCurrentChat(JSON.stringify(contact)); 
+
+      const root = ReactDOM.createRoot(
+        document.getElementById('chat-section')
+      );
+
+      root.render(<ChatSection currentChat={currentChat} currentUser={currentUser}  handlechange={handleChange}/>);
+    }
+
+
+
+    const handleChange=()=>{
+      console.log("olk");
+
     }
 
     return ( 
@@ -91,7 +104,7 @@ console.log(localStorage.getItem('chat-app-user'));
             {contacts.map((contact, index) => {
               return (
                 
-                    <div id={index} class="chat_list active_chat" onClick={()=>openChatSection(contact.name)}>
+                    <div id={index} class="chat_list active_chat" onClick={()=>openChatSection(contact,index)}>
                       <div class="chat_people">
                           <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"/> </div>
                           <div class="chat_ib">
@@ -106,15 +119,12 @@ console.log(localStorage.getItem('chat-app-user'));
           </div>
         </div>
 
-              {
-                chatselected?(  <ChatSection value={data} currentUser={currentUser} />  ) :
-                (
-                  <div className="d-flex justify-content-center mt-5">
-                      <h1>Welcome to WeChat</h1>
+<div id="chat-section">
 
-                  </div>
-                )
-              }
+</div>
+              {/*
+                chatselected &&(  <ChatSection currentChat={currentChat} currentUser={currentUser}  handlechange={handleChange}/>  ) 
+      */}
               
       </div>
       
