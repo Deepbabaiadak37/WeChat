@@ -5,7 +5,7 @@ const router=require('express').Router();
 
 
 
-router.get("/addmsg",addMessage);
+router.post("/addmsg",addMessage);
 router.post("/getmsg",getAllMessage);
 
 

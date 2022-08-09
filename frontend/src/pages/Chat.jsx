@@ -1,15 +1,19 @@
 import { useEffect,useState,useRef } from "react";
 import axios from 'axios';
-import { ContactsRoute} from '../utils/APIRoutes';
+import { ContactsRoute,host} from '../utils/APIRoutes';
 import './Chat.css';
 import ChatSection from "../components/ChatSection";
 import ReactDOM from 'react-dom/client';
-
+import {io} from "socket.io-client";
 
 
 function Chat() {
+
+
+    const socket=useRef();
+
     const [contacts, setContacts] = useState([]);
-    const [currentChat, setCurrentChat] = useState(undefined);
+   // const [currentChat, setCurrentChat] = useState(undefined);
     const [currentUser, setCurrentUser] = useState(undefined);
 
     const [chatselected,setChatselected]=useState(false);
@@ -55,24 +59,28 @@ function Chat() {
 
   
 
+    useEffect(()=>{
+        if(currentUser)
+        {
+          socket.current=io(host);
+          socket.current.emit("add-user",currentUser._id);
+        }
+    },[currentUser]);
 
-    const openChatSection=(contact,index)=>{  
+
+    const openChatSection=async (contact,index)=>{  
       setChatselected(true);
-      setCurrentChat(JSON.stringify(contact)); 
-
-      const root = ReactDOM.createRoot(
+      //setCurrentChat(JSON.stringify(contact)); 
+     
+      const rment = ReactDOM.createRoot(
         document.getElementById('chat-section')
       );
 
-      root.render(<ChatSection currentChat={currentChat} currentUser={currentUser}  handlechange={handleChange}/>);
+      rment.render(<ChatSection currentChat={JSON.stringify(contact)} currentUser={currentUser}  socket={socket}/>);
+      
     }
 
 
-
-    const handleChange=()=>{
-      console.log("olk");
-
-    }
 
     return ( 
         <>
@@ -121,11 +129,7 @@ function Chat() {
 
 <div id="chat-section">
 
-</div>
-              {/*
-                chatselected &&(  <ChatSection currentChat={currentChat} currentUser={currentUser}  handlechange={handleChange}/>  ) 
-      */}
-              
+</div>   
       </div>
       
       
